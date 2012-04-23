@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Coffeet.in by timcameronryan</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Coffeet.in</h1>
+        <p>CoffeeScript snippets.</p>
+        <p class="view"><a href="https://github.com/timcameronryan/coffeet.in">View the Project on GitHub <small>timcameronryan/coffeet.in</small></a></p>
+        <ul>
+          <li><a href="https://github.com/timcameronryan/coffeet.in/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/timcameronryan/coffeet.in/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/timcameronryan/coffeet.in">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h3>Coffeet.in</h3>
+
+<h4>Date formatting</h4>
+
+<p>Curly brackets used as a format specifier. You can also zero-pad values, a la <code>(new Date).format("{FullYear}-{Month:2}-{Date:2}")</code></p>
+
+<div class="highlight">
+<pre><span class="c1"># http://coffeet.in/date-format</span>
+<span class="nb">Date</span><span class="o">::</span><span class="nv">format = </span><span class="nf">(fmt) -&gt;</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">/\{([^}:]+)(?::(\d+))?\}/g</span><span class="p">,</span> <span class="p">(</span><span class="nx">raw</span><span class="p">,</span> <span class="nx">comp</span><span class="p">,</span> <span class="nx">len</span><span class="p">)</span> <span class="o">=&gt;</span>
+        <span class="nx">unless</span> <span class="p">(</span><span class="nv">n = </span><span class="nx">@</span><span class="p">[</span><span class="s">"get"</span><span class="o">+</span><span class="nx">comp</span><span class="p">]</span><span class="o">?</span><span class="p">())</span><span class="o">?</span> <span class="k">then</span> <span class="nx">raw</span>
+        <span class="k">else</span> <span class="p">(</span><span class="nb">Array</span><span class="p">(</span><span class="o">+</span><span class="nx">len</span><span class="o">|</span><span class="mi">0</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s">'0'</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="nx">n</span><span class="o">+</span><span class="p">(</span><span class="k">if</span> <span class="nx">comp</span> <span class="o">==</span> <span class="s">'Month'</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="s">''</span><span class="p">)))[</span><span class="o">-</span><span class="nx">len</span><span class="p">..]</span>
+<span class="nb">Date</span><span class="o">::</span><span class="nv">getFullMonth = </span><span class="o">-&gt;</span>
+    <span class="s">'January|February|March|April|May|June|July|August|September|October|November|December'</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s">'|'</span><span class="p">)[</span><span class="nx">@getMonth</span><span class="p">()]</span>
+<span class="nb">Date</span><span class="o">::</span><span class="nv">getHoursMeridiem = </span><span class="o">-&gt;</span> <span class="p">((</span><span class="nx">@getHours</span><span class="p">()</span><span class="o">+</span><span class="mi">11</span><span class="p">)</span> <span class="o">%</span> <span class="mi">12</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span>
+<span class="nb">Date</span><span class="o">::</span><span class="nv">getMeridiem = </span><span class="o">-&gt;</span> <span class="k">if</span> <span class="nx">@getHours</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">12</span> <span class="k">then</span> <span class="s">'pm'</span> <span class="k">else</span> <span class="s">'am'</span>
+</pre>
+</div>
+
+
+<h4>Cookies</h4>
+
+<p>Usage like: <a href="https://github.com/carhartl/jquery-cookie">https://github.com/carhartl/jquery-cookie</a></p>
+
+<div class="highlight">
+<pre><span class="nv">Cookies =</span>
+    <span class="nv">set: </span><span class="nf">(key, value, {path, domain, secure, raw, expires} = {}) -&gt;</span>
+        <span class="k">if</span> <span class="nx">value</span> <span class="k">in</span> <span class="p">[</span><span class="kc">null</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">]</span> <span class="k">then</span> <span class="nv">expires = </span><span class="o">-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="k">typeof</span> <span class="nx">expires</span> <span class="o">==</span> <span class="s">'number'</span>
+            <span class="nv">days = </span><span class="nx">expires</span>
+            <span class="p">(</span><span class="nv">expires = </span><span class="k">new</span> <span class="nb">Date</span><span class="p">()).</span><span class="nx">setDate</span> <span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getDate</span><span class="p">()</span> <span class="o">+</span> <span class="nx">days</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">document</span><span class="p">.</span><span class="nv">cookie = </span><span class="p">[</span><span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">key</span><span class="p">),</span> <span class="s">"="</span><span class="p">,</span>
+            <span class="k">if</span> <span class="nx">raw</span> <span class="k">then</span> <span class="s">""</span><span class="o">+</span><span class="nx">value</span> <span class="k">else</span> <span class="nb">encodeURIComponent</span><span class="p">(</span><span class="s">""</span><span class="o">+</span><span class="nx">value</span><span class="p">),</span>
+            <span class="c1"># use expires attribute, max-age is not supported by IE</span>
+            <span class="k">if</span> <span class="nx">expires</span><span class="o">?</span> <span class="k">then</span> <span class="s">"; expires="</span> <span class="o">+</span> <span class="nx">expires</span><span class="p">.</span><span class="nx">toUTCString</span><span class="p">()</span> 
+            <span class="k">if</span> <span class="nx">path</span><span class="o">?</span> <span class="k">then</span> <span class="s">"; path="</span> <span class="o">+</span> <span class="nx">path</span>
+            <span class="k">if</span> <span class="nx">domain</span><span class="o">?</span> <span class="k">then</span> <span class="s">"; domain="</span> <span class="o">+</span> <span class="nx">domain</span>
+            <span class="k">if</span> <span class="nx">secure</span><span class="o">?</span> <span class="k">then</span> <span class="s">"; secure"</span>
+        <span class="p">].</span><span class="nx">join</span> <span class="s">''</span>
+
+    <span class="nv">get: </span><span class="nf">(key, {raw} = {}) -&gt;</span>
+        <span class="nv">decode = </span><span class="nx">unless</span> <span class="nx">raw</span> <span class="k">then</span> <span class="nb">decodeURIComponent</span> <span class="k">else</span> <span class="nf">(s) -&gt;</span> <span class="nx">s</span>
+        <span class="k">for</span> <span class="nx">pair</span> <span class="k">in</span> <span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s">"; "</span><span class="p">)</span> <span class="k">when</span> <span class="p">(</span><span class="nv">pair = </span><span class="nx">pair</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s">"="</span><span class="p">))</span> <span class="o">and</span> <span class="nx">decode</span><span class="p">(</span><span class="nx">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nx">key</span>
+            <span class="c1"># IE saves cookies with empty string as "c; ", e.g. without "=" as opposed to EOMB, thus pair[1] may be undefined</span>
+            <span class="k">return</span> <span class="nx">decode</span><span class="p">(</span><span class="nx">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">or</span> <span class="s">''</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">null</span>
+</pre>
+</div>
+
+
+<h4>EventEmitter</h4>
+
+<div class="highlight">
+<pre><span class="k">class</span> <span class="nx">EventEmitter</span>
+        <span class="nv">listeners: </span><span class="nf">(type) -&gt;</span>
+            <span class="k">if</span> <span class="nx">@hasOwnProperty</span><span class="p">.</span><span class="nx">call</span> <span class="p">(</span><span class="k">if</span> <span class="nx">@_events</span><span class="o">?</span> <span class="k">then</span> <span class="nx">@_events</span> <span class="k">else</span> <span class="vi">@_events = </span><span class="p">{}),</span> <span class="nx">type</span> <span class="k">then</span> <span class="nx">@_events</span><span class="p">[</span><span class="nx">type</span><span class="p">]</span> <span class="k">else</span> <span class="nx">@_events</span><span class="p">[</span><span class="nx">type</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="kc">on</span><span class="o">:</span> <span class="nf">(args...) -&gt;</span> <span class="nx">@addListener</span> <span class="nx">args</span><span class="p">...</span>
+        <span class="nv">once: </span><span class="nf">(type, f) -&gt;</span> <span class="nx">@</span><span class="kc">on</span> <span class="nx">type</span><span class="p">,</span> <span class="nv">g = </span><span class="nf">(args...) -&gt;</span> <span class="nx">f</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">args</span><span class="p">);</span> <span class="nx">@removeListener</span> <span class="nx">type</span><span class="p">,</span> <span class="nx">g</span>
+        <span class="nv">addListener: </span><span class="nf">(type, f) -&gt;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">@listeners</span><span class="p">(</span><span class="nx">type</span><span class="p">).</span><span class="nx">push</span> <span class="nx">f</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nx">@_maxListeners</span> <span class="o">and</span> <span class="nx">@_maxListeners</span> <span class="o">!=</span> <span class="mi">0</span>
+                <span class="nx">console</span><span class="o">?</span><span class="p">.</span><span class="nx">warn</span> <span class="s">"Possible EventEmitter memory leak detected. </span><span class="si">#{</span><span class="nx">@_events</span><span class="p">[</span><span class="nx">type</span><span class="p">].</span><span class="nx">length</span><span class="si">}</span><span class="s"> listeners added. Use emitter.setMaxListeners() to increase limit."</span>
+            <span class="nx">@emit</span> <span class="s">"newListener"</span><span class="p">,</span> <span class="nx">type</span><span class="p">,</span> <span class="nx">f</span>
+            <span class="k">this</span>
+        <span class="nv">removeListener: </span><span class="nf">(type, f) -&gt;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">i = </span><span class="nx">@listeners</span><span class="p">(</span><span class="nx">type</span><span class="p">).</span><span class="nx">indexOf</span> <span class="nx">f</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="k">then</span> <span class="nx">@listeners</span><span class="p">(</span><span class="nx">type</span><span class="p">).</span><span class="nx">splice</span> <span class="nx">i</span><span class="p">,</span> <span class="mi">1</span>
+            <span class="k">this</span>
+        <span class="nv">removeAllListeners: </span><span class="nf">(type) -&gt;</span>
+            <span class="k">for</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span> <span class="k">of</span> <span class="p">(</span><span class="nx">@_events</span> <span class="o">or</span> <span class="p">{})</span> <span class="k">when</span> <span class="o">not</span> <span class="nx">type</span><span class="o">?</span> <span class="o">or</span> <span class="nx">type</span> <span class="o">==</span> <span class="nx">k</span> <span class="k">then</span> <span class="nx">v</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">v</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span>
+            <span class="k">this</span>
+        <span class="nv">emit: </span><span class="nf">(type, args...) -&gt;</span>
+            <span class="k">for</span> <span class="nx">f</span> <span class="k">in</span> <span class="nx">@listeners</span><span class="p">(</span><span class="nx">type</span><span class="p">)</span> <span class="k">then</span> <span class="nx">f</span><span class="p">.</span><span class="nx">apply</span> <span class="k">this</span><span class="p">,</span> <span class="nx">args</span>
+            <span class="nx">@listeners</span><span class="p">(</span><span class="nx">type</span><span class="p">).</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="nv">_maxListeners: </span><span class="mi">10</span>
+        <span class="nv">setMaxListeners: </span><span class="nf">(@_maxListeners) -&gt;</span>
+</pre>
+</div>
+
+
+<h4>DOM One-liners</h4>
+
+<div class="highlight">
+<pre><span class="nv">Dom =</span>
+
+    <span class="c1"># Info.</span>
+
+    <span class="nv">isText: </span><span class="nf">(d) -&gt;</span> <span class="nx">d</span><span class="o">?</span><span class="p">.</span><span class="nx">nodeType</span> <span class="o">==</span> <span class="mi">3</span>
+    <span class="nv">isElement: </span><span class="nf">(d, n) -&gt;</span>
+        <span class="nv">n = </span><span class="p">[</span><span class="nx">n</span><span class="p">]</span> <span class="k">if</span> <span class="k">typeof</span> <span class="nx">n</span> <span class="o">==</span> <span class="s">'string'</span>
+        <span class="nx">d</span><span class="o">?</span><span class="p">.</span><span class="nx">nodeType</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">and</span> <span class="p">(</span><span class="o">not</span> <span class="nx">n</span><span class="o">?</span> <span class="o">or</span> <span class="nx">d</span><span class="p">.</span><span class="nx">nodeName</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span> <span class="k">in</span> <span class="nx">n</span><span class="p">)</span>
+
+    <span class="nv">isInline: </span><span class="nf">(d) -&gt;</span> <span class="o">not</span> <span class="nx">Dom</span><span class="p">.</span><span class="nx">isBlock</span> <span class="nx">d</span>
+    <span class="nv">isBlock: </span><span class="nf">(d) -&gt;</span> <span class="o">/^</span><span class="p">(</span><span class="nx">address</span><span class="o">|</span><span class="nx">blockquote</span><span class="o">|</span><span class="nx">body</span><span class="o">|</span><span class="nx">center</span><span class="o">|</span><span class="nx">dir</span><span class="o">|</span><span class="nx">div</span><span class="o">|</span><span class="nx">dl</span><span class="o">|</span><span class="nx">fieldset</span><span class="o">|</span><span class="nx">form</span><span class="o">|</span><span class="nx">h</span><span class="p">[</span><span class="mi">1</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span><span class="o">|</span><span class="nx">hr</span><span class="o">|</span><span class="nx">isindex</span><span class="o">|</span><span class="nx">menu</span><span class="o">|</span><span class="nx">noframes</span><span class="o">|</span><span class="nx">noscript</span><span class="o">|</span><span class="nx">ol</span><span class="o">|</span><span class="nx">p</span><span class="o">|</span><span class="nx">pre</span><span class="o">|</span><span class="nx">table</span><span class="o">|</span><span class="nx">ul</span><span class="o">|</span><span class="nx">dd</span><span class="o">|</span><span class="nx">dt</span><span class="o">|</span><span class="nx">frameset</span><span class="o">|</span><span class="nx">li</span><span class="o">|</span><span class="nx">tbody</span><span class="o">|</span><span class="nx">td</span><span class="o">|</span><span class="nx">tfoot</span><span class="o">|</span><span class="nx">th</span><span class="o">|</span><span class="nx">thead</span><span class="o">|</span><span class="nx">tr</span><span class="o">|</span><span class="nx">html</span><span class="p">)</span><span class="nx">$</span><span class="o">/</span><span class="nx">i</span><span class="p">.</span><span class="nx">test</span> <span class="nx">d</span><span class="o">?</span><span class="p">.</span><span class="nx">nodeName</span>
+
+    <span class="nv">contains: </span><span class="nf">(n1, n2) -&gt;</span>
+        <span class="c1">#[TODO] might fail on IE-- does contains work for (element, textnode) ?</span>
+        <span class="k">return</span> <span class="k">if</span> <span class="nx">n1</span><span class="p">.</span><span class="nx">compareDocumentPosition</span><span class="o">?</span>
+                <span class="nx">n1</span><span class="p">.</span><span class="nx">compareDocumentPosition</span><span class="p">(</span><span class="nx">n2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">16</span>
+            <span class="k">else</span>
+                <span class="nx">n1</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="nx">n2</span><span class="p">)</span>
+
+    <span class="nv">getChildIndex: </span><span class="nf">(e) -&gt;</span>
+        <span class="nv">k = </span><span class="mi">0</span>
+        <span class="nx">k</span><span class="o">++</span> <span class="k">while</span> <span class="nv">e = </span><span class="nx">e</span><span class="p">.</span><span class="nx">previousSibling</span>
+        <span class="k">return</span> <span class="nx">k</span>
+
+    <span class="nv">tagName: </span><span class="nf">(e) -&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">nodeName</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span>
+
+    <span class="nv">getAttrs: </span><span class="nf">(e) -&gt;</span>
+        <span class="nv">attrs = </span><span class="p">{}</span>
+        <span class="k">for</span> <span class="nx">attr</span> <span class="k">in</span> <span class="nx">e</span><span class="p">.</span><span class="nx">attributes</span>
+            <span class="nx">attrs</span><span class="p">[</span><span class="nx">attr</span><span class="p">.</span><span class="nx">nodeName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">attr</span><span class="p">.</span><span class="nx">nodeValue</span>
+        <span class="k">return</span> <span class="nx">attrs</span>
+
+    <span class="nb">document</span><span class="o">:</span> <span class="nf">(e) -&gt;</span> <span class="nx">e</span><span class="o">?</span><span class="p">.</span><span class="nx">ownerDocument</span>
+
+    <span class="nv">doesElementMatch: </span><span class="nf">(e, tag, attrs) -&gt;</span>
+        <span class="k">return</span> <span class="kc">no</span> <span class="nx">unless</span> <span class="nx">tag</span> <span class="o">==</span> <span class="nx">Dom</span><span class="p">.</span><span class="nx">tagName</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+        <span class="k">for</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span> <span class="k">of</span> <span class="nx">attrs</span> <span class="k">then</span> <span class="k">return</span> <span class="kc">no</span> <span class="nx">unless</span> <span class="nx">v</span> <span class="o">==</span> <span class="nx">e</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span><span class="nx">k</span><span class="p">)</span>
+        <span class="c1"># Currently, we allow client to have extra attributes.</span>
+        <span class="k">return</span> <span class="kc">yes</span>
+
+    <span class="c1"># Data.</span>
+
+    <span class="nv">getData: </span><span class="nf">(e, key) -&gt;</span>
+        <span class="nv">val = </span><span class="nx">e</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span><span class="s">'data-'</span> <span class="o">+</span> <span class="nx">key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">if</span> <span class="nx">val</span><span class="o">?</span> <span class="k">then</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span> <span class="k">else</span> <span class="nx">val</span>
+
+    <span class="nv">getDataset: </span><span class="nf">(e) -&gt;</span>
+        <span class="nv">atts = </span><span class="p">{}</span>
+        <span class="k">for</span> <span class="nx">a</span> <span class="k">in</span> <span class="nx">e</span><span class="p">.</span><span class="nx">attributes</span> <span class="k">when</span> <span class="nx">a</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^data-/</span><span class="p">)</span>
+            <span class="nx">atts</span><span class="p">[</span><span class="nx">a</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">value</span>
+        <span class="k">return</span> <span class="nx">atts</span>
+
+    <span class="nv">setData: </span><span class="nf">(e, key, val) -&gt;</span>
+        <span class="k">if</span> <span class="nx">val</span><span class="o">?</span> <span class="k">then</span> <span class="nx">e</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s">'data-'</span> <span class="o">+</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span>
+        <span class="k">else</span> <span class="nx">e</span><span class="p">.</span><span class="nx">removeAttribute</span><span class="p">(</span><span class="s">'data-'</span> <span class="o">+</span> <span class="nx">key</span><span class="p">)</span>
+</pre>
+</div>
+
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/timcameronryan">timcameronryan</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
